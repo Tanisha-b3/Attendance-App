@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import authRoutes from "./Routes/authRoutes.js";
 import leaveRoutes from "./Routes/leaveRoutes.js";
 import attendanceRoutes from "./Routes/attendanceRoutes.js";
-import userRoutes from "./routes/UserRoutes.js";
+import userRoutes from "./Routes/UserRoutes.js";
 import connectDB from "./config/db.js";
 
 dotenv.config();
