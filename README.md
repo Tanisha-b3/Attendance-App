@@ -1,247 +1,328 @@
-<div align="center">
+# 🚀 Attendance & Leave Management System
 
-# 📋 Attendance App
+![React](https://img.shields.io/badge/Frontend-React-blue)
+![Node](https://img.shields.io/badge/Backend-Node.js-green)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-brightgreen)
+![TypeScript](https://img.shields.io/badge/Language-TypeScript-blue)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
-### A full-stack web application to track, manage, and monitor attendance effortlessly.
+A **full-stack Attendance and Leave Management System** built using the **MERN Stack** to simplify employee attendance tracking and leave management.
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Vercel-black?style=for-the-badge)](https://attendance-app-opal.vercel.app)
-[![TypeScript](https://img.shields.io/badge/TypeScript-89.7%25-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-8.3%25-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![CSS](https://img.shields.io/badge/CSS-1.9%25-1572B6?style=for-the-badge&logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
-
-</div>
-
----
-
-## 📖 Table of Contents
-
-- [About the Project](#-about-the-project)
-- [Features](#-features)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Running the App](#running-the-app)
-- [Environment Variables](#-environment-variables)
-- [Deployment](#-deployment)
-- [Contributing](#-contributing)
-- [Author](#-author)
+The system provides role-based access for **employees** and **administrators**, enabling efficient management of attendance records, leave requests, and approval workflows.
 
 ---
 
-## 🎯 About the Project
+# 📌 Project Overview
 
-**Attendance App** is a modern, full-stack attendance management system designed to simplify tracking attendance for students or employees. It features a clean frontend interface paired with a robust backend API, enabling real-time data management.
+Managing employee attendance and leave manually can be inefficient and error-prone.
+This application provides a centralized platform where employees can mark attendance, apply for leave, and track requests, while administrators can monitor attendance and manage leave approvals.
 
-> 🔗 **Live:** [attendance-app-opal.vercel.app](https://attendance-app-opal.vercel.app)
-
----
-
-## ✨ Features
-
-- ✅ **Mark Attendance** — Easily record present/absent status
-- 📊 **View Attendance Records** — Browse historical attendance data
-- 👥 **User Management** — Add and manage attendees/students
-- 🔐 **Secure API** — Backend with authentication and protected routes
-- 📱 **Responsive Design** — Works seamlessly on desktop and mobile
-- ☁️ **Cloud Deployed** — Hosted on Vercel for instant access
+The system is designed with a **modern UI, secure authentication, and scalable backend architecture**.
 
 ---
 
-## 🛠️ Tech Stack
+# ✨ Features
 
-### Frontend
-| Technology | Purpose |
-|------------|---------|
-| TypeScript | Strongly-typed application logic |
-| React | UI component framework |
-| CSS | Styling and responsive layout |
-| HTML | Markup structure |
+## 👨‍💻 Employee Features
 
-### Backend
-| Technology | Purpose |
-|------------|---------|
-| Node.js | Runtime environment |
-| Express.js | REST API framework |
-| TypeScript | Type-safe server logic |
-| MongoDB | Database for attendance records |
-
-### DevOps
-| Technology | Purpose |
-|------------|---------|
-| Vercel | Frontend deployment |
-| Git & GitHub | Version control |
+* Mark daily attendance
+* Apply for leave (Casual, Sick, Paid)
+* View leave requests
+* Cancel pending leave requests
+* View leave history
+* View attendance history
+* Dashboard with attendance statistics
 
 ---
 
-## 📁 Project Structure
+## 🛠 Admin Features
+
+* View attendance records of all employees
+* Approve or reject leave requests
+* Monitor leave statistics
+* Manage employee accounts
+* Track leave status and history
+
+---
+
+# 🧰 Tech Stack
+
+## Frontend
+
+* **React (Vite)** – Fast and optimized frontend framework
+* **TypeScript** – Static typing for better maintainability
+* **TailwindCSS** – Responsive modern UI styling
+* **ShadCN UI** – Reusable UI components
+* **Axios** – API communication
+* **React Hot Toast** – User notifications
+
+## Backend
+
+* **Node.js** – Server runtime
+* **Express.js** – REST API framework
+* **MongoDB** – NoSQL database
+* **Mongoose** – ODM for MongoDB
+* **JWT Authentication** – Secure login system
+* **CORS** – Cross-origin resource sharing support
+
+---
+
+# 🏗 System Architecture
 
 ```
-Attendance-App/
+React Frontend
+       │
+       │ REST API (Axios)
+       ▼
+Node.js + Express Backend
+       │
+       ▼
+MongoDB Database
+```
+
+---
+
+# 📂 Project Structure
+
+```
+Attendance-App
 │
-├── Fromtend/                  # Frontend (React + TypeScript)
-│   ├── public/                # Static assets
-│   ├── src/
-│   │   ├── components/        # Reusable UI components
-│   │   ├── pages/             # Application pages
-│   │   ├── App.tsx            # Root component
-│   │   └── index.tsx          # Entry point
-│   ├── package.json
-│   └── tsconfig.json
+├── backend
+│   ├── controllers
+│   ├── models
+│   ├── routes
+│   ├── middleware
+│   ├── config
+│   └── server.js
 │
-├── backend/                   # Backend (Node.js + Express + TypeScript)
-│   ├── src/
-│   │   ├── controllers/       # Route controllers
-│   │   ├── models/            # Database models
-│   │   ├── routes/            # API routes
-│   │   └── index.ts           # Server entry point
-│   ├── package.json
-│   └── tsconfig.json
+├── frontend
+│   ├── components
+│   ├── pages
+│   ├── services
+│   ├── context
+│   ├── hooks
+│   └── App.tsx
 │
 └── README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+# ⚙️ Installation
 
-### Prerequisites
+## 1️⃣ Clone the repository
 
-Make sure you have the following installed:
-
-- [Node.js](https://nodejs.org/) v16+
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
-- [MongoDB](https://www.mongodb.com/) (local or [MongoDB Atlas](https://www.mongodb.com/cloud/atlas))
-
-### Installation
-
-**1. Clone the repository**
-
-```bash
+```
 git clone https://github.com/Tanisha-b3/Attendance-App.git
 cd Attendance-App
 ```
 
-**2. Install Backend Dependencies**
+---
 
-```bash
+## 2️⃣ Install backend dependencies
+
+```
 cd backend
 npm install
 ```
 
-**3. Install Frontend Dependencies**
+---
 
-```bash
-cd ../Fromtend
+## 3️⃣ Install frontend dependencies
+
+```
+cd ../frontend
 npm install
 ```
 
-### Running the App
+---
 
-**Start the Backend Server**
+# 🔐 Environment Variables
 
-```bash
+Create a `.env` file inside the **backend folder**.
+
+```
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secret_key
+CLIENT_URL=http://localhost:5173
+```
+
+---
+
+# ▶️ Run the Application
+
+## Start Backend
+
+```
 cd backend
 npm run dev
 ```
 
-> Backend runs on `http://localhost:5000` by default
+Backend runs on
 
-**Start the Frontend**
-
-Open a new terminal:
-
-```bash
-cd Fromtend
-npm start
+```
+http://localhost:5000
 ```
 
-> Frontend runs on `http://localhost:3000`
-
 ---
 
-## 🔐 Environment Variables
+## Start Frontend
 
-Create a `.env` file inside the `backend/` directory:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+```
+cd frontend
+npm run dev
 ```
 
-Create a `.env` file inside the `Fromtend/` directory:
+Frontend runs on
 
-```env
-REACT_APP_API_URL=http://localhost:5000
+```
+http://localhost:5173
 ```
 
-> ⚠️ Never commit `.env` files to version control. Add them to `.gitignore`.
+---
+
+# 🔌 API Endpoints
+
+## Authentication
+
+| Method | Endpoint           | Description       |
+| ------ | ------------------ | ----------------- |
+| POST   | /api/auth/register | Register new user |
+| POST   | /api/auth/login    | User login        |
 
 ---
 
-## 🌐 Deployment
+## Attendance
 
-This app is deployed on **Vercel**. To deploy your own instance:
-
-1. **Fork** this repository
-2. Go to [vercel.com](https://vercel.com) and import your forked repo
-3. Set up **environment variables** in the Vercel dashboard
-4. Deploy the **frontend** (`Fromtend/`) as the main project
-5. Deploy the **backend** separately (e.g., on [Render](https://render.com) or [Railway](https://railway.app))
-6. Update `REACT_APP_API_URL` to point to your live backend URL
+| Method | Endpoint                      | Description                |
+| ------ | ----------------------------- | -------------------------- |
+| POST   | /api/attendance/mark          | Mark attendance            |
+| GET    | /api/attendance/my-attendance | Get user attendance        |
+| GET    | /api/attendance               | Admin fetch all attendance |
 
 ---
 
-## 🤝 Contributing
+## Leave Management
 
-Contributions, issues, and feature requests are welcome! 🙌
-
-1. **Fork** the repository
-2. Create your feature branch
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. Commit your changes
-   ```bash
-   git commit -m "Add AmazingFeature"
-   ```
-4. Push to the branch
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. Open a **Pull Request**
+| Method | Endpoint              | Description                    |
+| ------ | --------------------- | ------------------------------ |
+| POST   | /api/leaves/apply     | Apply for leave                |
+| GET    | /api/leaves/my-leaves | Get user leave requests        |
+| GET    | /api/leaves           | Admin fetch all leave requests |
+| PUT    | /api/leaves/:id       | Update leave status            |
+| DELETE | /api/leaves/:id       | Cancel leave request           |
 
 ---
 
-## 📄 License
+# 🗄 Database Models
 
-This project is open source and available under the [MIT License](LICENSE).
+## User Model
+
+Fields
+
+* name
+* email
+* password
+* role (admin / employee)
+* leaveBalance
+
+Relationship
+
+```
+User → Attendance (One to Many)
+User → Leave Requests (One to Many)
+```
 
 ---
 
-## 👩‍💻 Author
+## Attendance Model
 
-<div align="center">
+Fields
+
+* user
+* date
+* status (Present / Absent)
+* createdAt
+
+---
+
+## Leave Model
+
+Fields
+
+* user
+* leaveType
+* startDate
+* endDate
+* totalDays
+* reason
+* status (Pending / Approved / Rejected)
+* appliedDate
+
+---
+
+# 👤 Admin Credentials
+
+If admin is seeded in database:
+
+```
+Email: admin@example.com
+Password: admin123
+```
+
+---
+
+# 🤖 AI Tools Declaration
+
+The following AI tools were used during development:
+
+**ChatGPT**
+
+* Debugging assistance
+* API design suggestions
+* UI improvement ideas
+* Documentation guidance
+
+All final implementation and code integration were completed manually.
+
+---
+
+# ⚠ Known Limitations
+
+* No email notifications for leave approval
+* Attendance editing not implemented
+* Basic role system (admin / employee)
+* No analytics dashboard
+
+---
+
+# 🚀 Future Improvements
+
+* Email notifications for leave approvals
+* Attendance analytics dashboard
+* Automatic leave balance management
+* Role-based permission system
+* Mobile-friendly UI
+
+---
+
+# ⏱ Time Spent
+
+Approximately **20 hours**
+
+* Backend development — 8 hours
+* Frontend development — 8 hours
+* Debugging & testing — 3 hours
+* Documentation — 1 hour
+
+---
+
+# 👩‍💻 Author
 
 **Tanisha Borana**
 
-[![GitHub](https://img.shields.io/badge/GitHub-Tanisha--b3-181717?style=flat-square&logo=github)](https://github.com/Tanisha-b3)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-tanisha--borana-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/tanisha-borana-552797233)
-[![LeetCode](https://img.shields.io/badge/LeetCode-tanishaborana970-FFA116?style=flat-square&logo=leetcode&logoColor=black)](https://leetcode.com/tanishaborana970/)
-[![GeeksforGeeks](https://img.shields.io/badge/GFG-tanishabw22l-2F8D46?style=flat-square&logo=geeksforgeeks&logoColor=white)](https://auth.geeksforgeeks.org/user/tanishabw22l)
+Full Stack Developer
 
-📧 tanishaborana970@gmail.com
-
-*LNCT'25 | Full-Stack Developer | MERN Stack Enthusiast*
-
-</div>
-
----
-
-<div align="center">
-
-⭐ If you found this project helpful, please consider giving it a **star**!
-
-</div>
+GitHub:
+https://github.com/Tanisha-b3
