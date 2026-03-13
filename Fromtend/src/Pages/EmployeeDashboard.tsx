@@ -115,6 +115,7 @@ const EmployeeDashboard: React.FC = () => {
         attendanceService.getUserAttendance(),
         leaveService.getLeaveBalance(),
       ]);
+      console.log("Dashboard data:", { leavesRes, attendanceRes, balanceRes });
       setLeaveRequests(leavesRes);
       setAttendance(attendanceRes);
       setLeaveBalance(balanceRes.leaveBalance);
@@ -154,12 +155,22 @@ const EmployeeDashboard: React.FC = () => {
     }
   };
 
-  /* ── derived ── */
-  const todayStr        = new Date().toISOString().split("T")[0];
-  const todayAttendance = attendance.find((a) => a.date === todayStr)
-  const pendingLeaves   = leaveRequests.filter((l) => l.status === "Pending").length;
-  const totalPresent    = attendance.filter((a) => a.status === "Present").length;
-  const approvedLeaves  = leaveRequests.filter((l) => l.status === "Approved").length;
+ /* ── derived ── */
+const todayStr = new Date().toISOString().split("T")[0];
+
+const todayAttendance = (attendance ?? []).find((a) => a.date === todayStr);
+
+const pendingLeaves = (leaveRequests ?? []).filter(
+  (l) => l.status === "Pending"
+).length;
+
+const totalPresent = (attendance ?? []).filter(
+  (a) => a.status === "Present"
+).length;
+
+const approvedLeaves = (leaveRequests ?? []).filter(
+  (l) => l.status === "Approved"
+).length;
 
   if (loading) {
     return (
