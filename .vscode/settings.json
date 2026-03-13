@@ -1,0 +1,8 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/9ea4b7b4-36f0-4d7e-b0cf-98c2598750b7/resourceGroups/Web-App/providers/Microsoft.Web/sites/attendane-app-fixl-Solution",
+    "appService.deploySubpath": "backend",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
+}
