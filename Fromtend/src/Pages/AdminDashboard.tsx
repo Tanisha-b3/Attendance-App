@@ -30,18 +30,14 @@ import {
 import {
   Dialog,
   DialogContent,
- 
   DialogHeader,
   DialogTitle,
- 
 } from "../components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
-  
   DrawerHeader,
   DrawerTitle,
- 
 } from "../components/ui/drawer";
 import toast from "react-hot-toast";
 import leaveService from "../services/leaveService";
@@ -53,10 +49,8 @@ import {
   Clock, 
   UserCheck, 
   UserX, 
- 
   Search,
   Filter,
- 
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -66,11 +60,8 @@ import {
   AlertCircle,
   MoreVertical,
   Eye,
- 
   RefreshCw,
- 
   Mail,
- 
   X,
   Bell,
 } from "lucide-react";
@@ -109,6 +100,7 @@ const useMediaQuery = (query: string): boolean => {
 
   return matches;
 };
+
 const AdminDashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([]);
@@ -124,9 +116,7 @@ const AdminDashboard: React.FC = () => {
   const [selectedLeave, setSelectedLeave] = useState<LeaveRequest | null>(null);
   const [detailsOpen, setDetailsOpen] = useState<boolean>(false);
 
-  
   const isMobile = useMediaQuery("(max-width: 768px)");
- 
 
   // Pagination states
   const [leavePagination, setLeavePagination] = useState<PaginationState>({
@@ -220,11 +210,12 @@ const AdminDashboard: React.FC = () => {
     let filtered = [...leaveRequests];
     
     if (searchTerm) {
-      filtered = filtered.filter(leave => 
-       typeof leave.user !== "string" ? leave.user.name : "".toLowerCase().includes(searchTerm.toLowerCase()) ||
-        leave.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        leave.status?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter(leave => {
+        const userName = typeof leave.user !== "string" ? leave.user.name : "";
+        return userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          leave.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          leave.status?.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }
     
     if (statusFilter !== "all") {
@@ -239,10 +230,11 @@ const AdminDashboard: React.FC = () => {
     let filtered = [...attendance];
     
     if (searchTerm) {
-      filtered = filtered.filter(record => 
-        typeof record.user !== "string" ? record.user.name.toLowerCase().includes(searchTerm.toLowerCase()) : "".toLowerCase().includes(searchTerm.toLowerCase()) ||
-        record.status?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter(record => {
+        const userName = typeof record.user !== "string" ? record.user.name : "";
+        return userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          record.status?.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }
     
     setFilteredAttendance(filtered);
@@ -256,7 +248,6 @@ const AdminDashboard: React.FC = () => {
       filtered = filtered.filter(user => 
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-       
         user.role?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -331,48 +322,172 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handlePageChange = (
-  _pagination: PaginationState,
-  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>,
-  direction: "first" | "prev" | "next" | "last"
-) => {
-  setPagination((prev) => {
-    let newPage = prev.currentPage;
-    const totalPages = Math.ceil(prev.totalItems / prev.itemsPerPage);
+    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>,
+    direction: "first" | "prev" | "next" | "last"
+  ) => {
+    setPagination((prev) => {
+      let newPage = prev.currentPage;
+      const totalPages = Math.ceil(prev.totalItems / prev.itemsPerPage);
 
-    switch (direction) {
-      case "first":
-        newPage = 1;
-        break;
-      case "prev":
-        newPage = Math.max(1, prev.currentPage - 1);
-        break;
-      case "next":
-        newPage = Math.min(totalPages, prev.currentPage + 1);
-        break;
-      case "last":
-        newPage = totalPages;
-        break;
+      switch (direction) {
+        case "first":
+          newPage = 1;
+          break;
+        case "prev":
+          newPage = Math.max(1, prev.currentPage - 1);
+          break;
+        case "next":
+          newPage = Math.min(totalPages, prev.currentPage + 1);
+          break;
+        case "last":
+          newPage = totalPages;
+          break;
+      }
+
+      return { ...prev, currentPage: newPage };
+    });
+  };
+
+  const handleItemsPerPageChange = (
+    value: string,
+    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>
+  ) => {
+    setPagination((prev) => ({
+      ...prev,
+      itemsPerPage: parseInt(value),
+      currentPage: 1,
+    }));
+  };
+
+  // Pagination Controls Component
+  const PaginationControls = ({ 
+    pagination, 
+    setPagination,
+    compact = false
+  }: { 
+    pagination: PaginationState; 
+    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+    compact?: boolean;
+  }) => {
+    const totalPages = Math.ceil(pagination.totalItems / pagination.itemsPerPage);
+    const startItem = pagination.totalItems > 0 
+      ? (pagination.currentPage - 1) * pagination.itemsPerPage + 1 
+      : 0;
+    const endItem = pagination.totalItems > 0 
+      ? Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems) 
+      : 0;
+    
+    const hasNoContent = pagination.totalItems === 0;
+    const isFirstPage = pagination.currentPage === 1 || hasNoContent;
+    const isLastPage = pagination.currentPage === totalPages || hasNoContent || totalPages === 0;
+
+    if (compact) {
+      return (
+        <div className="flex items-center justify-between px-2 py-3 border-t border-gray-200">
+          <div className="text-xs text-gray-700">
+            {hasNoContent ? '0-0 of 0' : `${startItem}-${endItem} of ${pagination.totalItems}`}
+          </div>
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => handlePageChange(setPagination, 'prev')}
+              disabled={isFirstPage}
+              className="h-7 w-7"
+            >
+              <ChevronLeft className="h-3 w-3" />
+            </Button>
+            <span className="text-xs text-gray-700 min-w-[40px] text-center">
+              {hasNoContent ? '0/0' : `${pagination.currentPage}/${totalPages}`}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => handlePageChange(setPagination, 'next')}
+              disabled={isLastPage}
+              className="h-7 w-7"
+            >
+              <ChevronRight className="h-3 w-3" />
+            </Button>
+          </div>
+        </div>
+      );
     }
 
-    return { ...prev, currentPage: newPage };
-  });
-};
- const handleItemsPerPageChange = (
-  value: string,
-  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>
-) => {
-  setPagination((prev) => ({
-    ...prev,
-    itemsPerPage: parseInt(value),
-    currentPage: 1,
-  }));
-};
+    return (
+      <div className="flex flex-col sm:flex-row items-center justify-between px-2 py-4 border-t border-gray-200 gap-4">
+        <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
+          <div className="flex items-center space-x-2">
+            <p className="text-xs sm:text-sm text-gray-700">Rows per page</p>
+            <Select
+              value={pagination.itemsPerPage.toString()}
+              onValueChange={(value) => value && handleItemsPerPageChange(value, setPagination)}
+              disabled={hasNoContent}
+            >
+              <SelectTrigger className="h-8 w-16">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="text-xs sm:text-sm text-gray-700">
+            {hasNoContent ? '0-0 of 0' : `${startItem}-${endItem} of ${pagination.totalItems}`}
+          </div>
+        </div>
+        <div className="flex items-center space-x-1 sm:space-x-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => handlePageChange(setPagination, 'first')}
+            disabled={isFirstPage}
+            className="h-7 w-7 sm:h-8 sm:w-8"
+          >
+            <ChevronsLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => handlePageChange(setPagination, 'prev')}
+            disabled={isFirstPage}
+            className="h-7 w-7 sm:h-8 sm:w-8"
+          >
+            <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+          </Button>
+          <span className="text-xs sm:text-sm text-gray-700 min-w-[60px] sm:min-w-[80px] text-center">
+            {hasNoContent ? '0/0' : `${pagination.currentPage}/${totalPages}`}
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => handlePageChange(setPagination, 'next')}
+            disabled={isLastPage}
+            className="h-7 w-7 sm:h-8 sm:w-8"
+          >
+            <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => handlePageChange(setPagination, 'last')}
+            disabled={isLastPage}
+            className="h-7 w-7 sm:h-8 sm:w-8"
+          >
+            <ChevronsRight className="h-3 w-3 sm:h-4 sm:w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
 
   // Mobile-friendly detail view
-  const EmployeeDetailView = ({ employee, onClose }: { employee: User; onClose: () => void }) => {
-   const employeeAttendance = attendance.filter(
-  (a) => typeof a.user !== "string" && a.user._id === employee._id
-);
+  const EmployeeDetailView = ({ employee }: { employee: User; onClose: () => void }) => {
+    const employeeAttendance = attendance.filter(
+      (a) => typeof a.user !== "string" && a.user._id === employee._id
+    );
     const presentCount = employeeAttendance.filter(a => a.status === "Present").length;
     const attendanceRate = employeeAttendance.length > 0 
       ? Math.round((presentCount / employeeAttendance.length) * 100) 
@@ -388,16 +503,15 @@ const AdminDashboard: React.FC = () => {
             </Avatar>
             <div>
               <h3 className="font-semibold text-lg">{employee.name}</h3>
-              
+              <p className="text-sm text-gray-500">{employee.role || 'Employee'}</p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          {/* <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-4 w-4" />
-          </Button>
+          </Button> */}
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          
           <div className="bg-gray-50 p-3 rounded-lg">
             <p className="text-xs text-gray-500">Leave Balance</p>
             <p className="font-medium text-sm">{employee.leaveBalance || 0} days</p>
@@ -406,7 +520,6 @@ const AdminDashboard: React.FC = () => {
             <p className="text-xs text-gray-500">Attendance Rate</p>
             <p className="font-medium text-sm">{attendanceRate}%</p>
           </div>
-          
         </div>
 
         <div className="space-y-2">
@@ -414,18 +527,19 @@ const AdminDashboard: React.FC = () => {
             <Mail className="h-4 w-4 mr-2 text-gray-400" />
             <span>{employee.email}</span>
           </div>
-         
+          <div className="flex items-center text-sm">
+            <Badge className={employee.isActive ? 'bg-green-500' : 'bg-gray-500'}>
+              {employee.isActive ? 'Active' : 'Inactive'}
+            </Badge>
+          </div>
         </div>
 
-        <div className="flex space-x-2 pt-2">
-          <Button className="flex-1" size="sm">Edit Profile</Button>
-          <Button variant="outline" size="sm" className="flex-1">View Attendance</Button>
-        </div>
+
       </div>
     );
   };
 
-  const LeaveDetailView = ({ leave }: { leave: LeaveRequest; onClose: () => void }) => (
+  const LeaveDetailView = ({ leave, onClose }: { leave: LeaveRequest; onClose: () => void }) => (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
@@ -434,27 +548,29 @@ const AdminDashboard: React.FC = () => {
             <AvatarFallback>{typeof leave.user !== "string" ? leave.user.name?.charAt(0) : leave.user?.charAt(0)}</AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-semibold">{typeof leave.user !== "string" ? leave.user.name : ""}</h3>
-            <p className="text-xs text-gray-500">{typeof leave.user !== "string" ? leave.user.email :""}</p>
+            <h3 className="font-semibold">{typeof leave.user !== "string" ? leave.user.name : "Unknown"}</h3>
+            <p className="text-xs text-gray-500">{typeof leave.user !== "string" ? leave.user.email : ""}</p>
           </div>
         </div>
-        
+        <Button variant="ghost" size="icon" onClick={onClose}>
+          <X className="h-4 w-4" />
+        </Button>
       </div>
 
       <div className="bg-gray-50 p-3 rounded-lg space-y-2">
         <div className="flex justify-between">
           <span className="text-sm text-gray-500">Status</span>
           <Badge
-  className={
-    leave.status === "Approved"
-      ? "bg-green-500 text-white"
-      : leave.status === "Rejected"
-      ? "bg-red-500 text-white"
-      : "bg-yellow-500 text-white"
-  }
->
-  {leave.status}
-</Badge>
+            className={
+              leave.status === "Approved"
+                ? "bg-green-500 text-white"
+                : leave.status === "Rejected"
+                ? "bg-red-500 text-white"
+                : "bg-yellow-500 text-white"
+            }
+          >
+            {leave.status}
+          </Badge>
         </div>
         <div className="flex justify-between">
           <span className="text-sm text-gray-500">Type</span>
@@ -501,123 +617,6 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  // Pagination Controls Component
-  const PaginationControls = ({ 
-    pagination, 
-    setPagination,
-    
-    compact = false
-  }: { 
-    pagination: PaginationState; 
-    setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
-    totalItems: number;
-    compact?: boolean;
-  }) => {
-    const totalPages = Math.ceil(pagination.totalItems / pagination.itemsPerPage);
-    const startItem = (pagination.currentPage - 1) * pagination.itemsPerPage + 1;
-    const endItem = Math.min(pagination.currentPage * pagination.itemsPerPage, pagination.totalItems);
-
-    if (compact) {
-      return (
-        <div className="flex items-center justify-between px-2 py-3 border-t border-gray-200">
-          <div className="text-xs text-gray-700">
-            {startItem}-{endItem} of {pagination.totalItems}
-          </div>
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handlePageChange(pagination, setPagination, 'prev')}
-              disabled={pagination.currentPage === 1}
-              className="h-7 w-7"
-            >
-              <ChevronLeft className="h-3 w-3" />
-            </Button>
-            <span className="text-xs text-gray-700 min-w-[40px] text-center">
-              {pagination.currentPage}/{totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handlePageChange(pagination, setPagination, 'next')}
-              disabled={pagination.currentPage === totalPages}
-              className="h-7 w-7"
-            >
-              <ChevronRight className="h-3 w-3" />
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div className="flex flex-col sm:flex-row items-center justify-between px-2 py-4 border-t border-gray-200 gap-4">
-        <div className="flex items-center space-x-4 sm:space-x-6 w-full sm:w-auto">
-          <div className="flex items-center space-x-2">
-            <p className="text-xs sm:text-sm text-gray-700">Rows</p>
-            <Select
-              value={pagination.itemsPerPage.toString()}
-             onValueChange={(value) => value && handleItemsPerPageChange(value, setPagination)}
-            >
-              <SelectTrigger className="h-8 w-16">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="5">5</SelectItem>
-               
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="text-xs sm:text-sm text-gray-700">
-            {startItem}-{endItem} of {pagination.totalItems}
-          </div>
-        </div>
-        <div className="flex items-center space-x-1 sm:space-x-2">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handlePageChange(pagination, setPagination, 'first')}
-            disabled={pagination.currentPage === 1}
-            className="h-7 w-7 sm:h-8 sm:w-8"
-          >
-            <ChevronsLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handlePageChange(pagination, setPagination, 'prev')}
-            disabled={pagination.currentPage === 1}
-            className="h-7 w-7 sm:h-8 sm:w-8"
-          >
-            <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-          </Button>
-          <span className="text-xs sm:text-sm text-gray-700 min-w-[60px] sm:min-w-[80px] text-center">
-            {pagination.currentPage}/{totalPages}
-          </span>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handlePageChange(pagination, setPagination, 'next')}
-            disabled={pagination.currentPage === totalPages}
-            className="h-7 w-7 sm:h-8 sm:w-8"
-          >
-            <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handlePageChange(pagination, setPagination, 'last')}
-            disabled={pagination.currentPage === totalPages}
-            className="h-7 w-7 sm:h-8 sm:w-8"
-          >
-            <ChevronsRight className="h-3 w-3 sm:h-4 sm:w-4" />
-          </Button>
-        </div>
-      </div>
-    );
-  };
-
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4">
@@ -660,7 +659,6 @@ const AdminDashboard: React.FC = () => {
             <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          
         </div>
       </div>
 
@@ -671,45 +669,37 @@ const AdminDashboard: React.FC = () => {
           value={stats.totalEmployees}
           icon={Users}
           color="blue"
-          compact={isMobile}
         />
         <StatCard
           title="Pending"
           value={stats.pendingLeaves}
           icon={AlertCircle}
           color="yellow"
-          compact={isMobile}
         />
         <StatCard
           title="Approved"
           value={stats.leaveApproved}
           icon={CheckCircle}
           color="green"
-          compact={isMobile}
         />
         <StatCard
           title="Present"
           value={stats.presentToday}
           icon={UserCheck}
           color="green"
-          compact={isMobile}
         />
         <StatCard
           title="On Leave"
           value={stats.onLeaveToday}
           icon={Clock}
           color="orange"
-          compact={isMobile}
         />
         <StatCard
           title="Absent"
           value={stats.absentToday}
           icon={UserX}
           color="red"
-          compact={isMobile}
         />
-        
-       
       </div>
 
       {/* Search and Filter - Responsive */}
@@ -723,9 +713,9 @@ const AdminDashboard: React.FC = () => {
             className="pl-10 h-9 sm:h-10 text-sm"
           />
         </div>
-      <Select
+<Select
   value={statusFilter}
-  onValueChange={(value) => setStatusFilter(value || "all")}
+  onValueChange={(value) => setStatusFilter(value ?? "all")}
 >
           <SelectTrigger className="w-full sm:w-[150px] h-9 sm:h-10">
             <Filter className="h-4 w-4 mr-2" />
@@ -758,33 +748,71 @@ const AdminDashboard: React.FC = () => {
               {isMobile ? (
                 // Mobile leave cards view
                 <div className="space-y-3">
-                  {getPaginatedData(filteredAttendance, attendancePagination).map((record) => {
-  const userName =
-    record.user && typeof record.user !== "string"
-      ? record.user.name
-      : typeof record.user === "string"
-      ? record.user
-      : "Unknown";
-
-  return (
-    <TableRow key={record._id}>
-      <TableCell>
-        <div className="flex items-center space-x-2">
-          <Avatar className="h-7 w-7">
-            <AvatarImage
-              src={`https://ui-avatars.com/api/?name=${userName}`}
-            />
-            <AvatarFallback>
-              {userName.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-
-          <span className="text-sm">{userName}</span>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-})}
+                  {getPaginatedData(filteredLeaves, leavePagination).map((leave) => {
+                    const userName = typeof leave.user !== "string" ? leave.user.name : "Unknown";
+                    return (
+                      <div key={leave._id} className="bg-white border rounded-lg p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={`https://ui-avatars.com/api/?name=${userName}`} />
+                              <AvatarFallback>{userName?.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium text-sm">{userName}</p>
+                              <p className="text-xs text-gray-500">{leave.leaveType || 'Annual'}</p>
+                            </div>
+                          </div>
+                          <Badge
+                            className={
+                              leave.status === "Approved"
+                                ? "bg-green-500 text-white"
+                                : leave.status === "Rejected"
+                                ? "bg-red-500 text-white"
+                                : "bg-yellow-500 text-white"
+                            }
+                          >
+                            {leave.status}
+                          </Badge>
+                        </div>
+                        <div className="text-xs text-gray-600">
+                          {new Date(leave.startDate).toLocaleDateString()} - {new Date(leave.endDate).toLocaleDateString()}
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => {
+                              setSelectedLeave(leave);
+                              setDetailsOpen(true);
+                            }}
+                          >
+                            <Eye className="h-4 w-4 mr-1" /> View
+                          </Button>
+                          {leave.status === 'Pending' && (
+                            <>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="text-green-600"
+                                onClick={() => handleLeaveAction(leave._id, "Approved")}
+                              >
+                                <CheckCircle className="h-4 w-4 mr-1" /> Approve
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="text-red-600"
+                                onClick={() => handleLeaveAction(leave._id, "Rejected")}
+                              >
+                                <XCircle className="h-4 w-4 mr-1" /> Reject
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 // Desktop leave table view
@@ -813,7 +841,7 @@ const AdminDashboard: React.FC = () => {
                                     : leave.user?.charAt(0)}
                                 </AvatarFallback>
                               </Avatar>
-                              <span className="text-sm">{typeof leave.user !== "string" ? leave.user.name : leave.user }</span>
+                              <span className="text-sm">{typeof leave.user !== "string" ? leave.user.name : leave.user}</span>
                             </div>
                           </TableCell>
                           <TableCell className="text-sm">{leave.leaveType || 'Annual'}</TableCell>
@@ -822,11 +850,15 @@ const AdminDashboard: React.FC = () => {
                           </TableCell>
                           <TableCell className="text-sm max-w-[200px] truncate">{leave.reason}</TableCell>
                           <TableCell>
-                            <Badge variant={
-                              leave.status === 'Approved' ? "default" : 
-                              leave.status === 'Rejected' ? 'destructive' : 
-                              'ghost'
-                            } className="text-xs">
+                            <Badge
+                              className={
+                                leave.status === "Approved"
+                                  ? "bg-green-500 text-white"
+                                  : leave.status === "Rejected"
+                                  ? "bg-red-500 text-white"
+                                  : "bg-yellow-500 text-white"
+                              }
+                            >
                               {leave.status}
                             </Badge>
                           </TableCell>
@@ -886,7 +918,6 @@ const AdminDashboard: React.FC = () => {
             <PaginationControls
               pagination={leavePagination}
               setPagination={setLeavePagination}
-              totalItems={filteredLeaves.length}
               compact={isMobile}
             />
           </Card>
@@ -903,33 +934,32 @@ const AdminDashboard: React.FC = () => {
                 // Mobile attendance cards
                 <div className="space-y-3">
                   {getPaginatedData(filteredAttendance, attendancePagination).map((record) => { 
-                    const userName =
-  typeof record.user !== "string"
-    ? record.user.name
-    : record.user;
-                    return(
-                    <div key={record._id} className="bg-white border rounded-lg p-3 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={`https://ui-avatars.com/api/?name=${userName}`} />
-
-<AvatarFallback>{userName?.charAt(0)}</AvatarFallback>
-
-                          </Avatar>
-                          <div>
-                           
-<p className="font-medium text-sm">{userName}</p>
-                          
+                    const userName = typeof record.user !== "string" ? record.user.name : record.user;
+                    return (
+                      <div key={record._id} className="bg-white border rounded-lg p-3 space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={`https://ui-avatars.com/api/?name=${userName}`} />
+                              <AvatarFallback>{userName?.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium text-sm">{userName}</p>
+                            </div>
                           </div>
+                          <Badge
+                            className={
+                              record.status === 'Present' 
+                                ? 'bg-green-500 text-white' 
+                                : 'bg-gray-500 text-white'
+                            }
+                          >
+                            {record.status}
+                          </Badge>
                         </div>
-                        <Badge variant={record.status === 'Present' ? 'default' : 'secondary'} className="text-xs">
-                          {record.status}
-                        </Badge>
                       </div>
-                     
-                    </div>
-                  )})}
+                    );
+                  })}
                 </div>
               ) : (
                 // Desktop attendance table
@@ -938,8 +968,6 @@ const AdminDashboard: React.FC = () => {
                     <TableHeader>
                       <TableRow>
                         <TableHead className="text-xs">Employee</TableHead>
-                      
-                        
                         <TableHead className="text-xs">Status</TableHead>
                       </TableRow>
                     </TableHeader>
@@ -961,10 +989,14 @@ const AdminDashboard: React.FC = () => {
                               </span>
                             </div>
                           </TableCell>
-                         
-                          
                           <TableCell>
-                            <Badge variant={record.status === 'Present' ? 'default' : 'secondary'} className="text-xs">
+                            <Badge
+                              className={
+                                record.status === 'Present' 
+                                  ? 'bg-green-500 text-white' 
+                                  : 'bg-gray-500 text-white'
+                              }
+                            >
                               {record.status}
                             </Badge>
                           </TableCell>
@@ -984,7 +1016,6 @@ const AdminDashboard: React.FC = () => {
             <PaginationControls
               pagination={attendancePagination}
               setPagination={setAttendancePagination}
-              totalItems={filteredAttendance.length}
               compact={isMobile}
             />
           </Card>
@@ -1003,7 +1034,7 @@ const AdminDashboard: React.FC = () => {
                   {getPaginatedData(filteredUsers, usersPagination).map((user) => (
                     <div 
                       key={user._id} 
-                      className="bg-white border rounded-lg p-3 space-y-2"
+                      className="bg-white border rounded-lg p-3 space-y-2 cursor-pointer hover:bg-gray-50"
                       onClick={() => {
                         setSelectedEmployee(user);
                         setDetailsOpen(true);
@@ -1020,15 +1051,18 @@ const AdminDashboard: React.FC = () => {
                             <p className="text-xs text-gray-500">{user.role || 'Employee'}</p>
                           </div>
                         </div>
-                       
-                        <div>
-                          <p className="text-gray-500">Leave Balance</p>
-                          <p className="font-medium">{user.leaveBalance || 0} days</p>
-                        </div>
+                        <Badge className={user.isActive ? 'bg-green-500' : 'bg-gray-500'}>
+                          {user.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
                       </div>
-                      <div className="flex items-center text-xs text-gray-500">
-                        <Mail className="h-3 w-3 mr-1" />
-                        <span className="truncate">{user.email}</span>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <div className="flex items-center">
+                          <Mail className="h-3 w-3 mr-1" />
+                          <span className="truncate">{user.email}</span>
+                        </div>
+                        <div>
+                          <span className="font-medium">{user.leaveBalance || 0} days</span> leave
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -1040,7 +1074,6 @@ const AdminDashboard: React.FC = () => {
                     <TableHeader>
                       <TableRow>
                         <TableHead className="text-xs">Employee</TableHead>
-                        
                         <TableHead className="text-xs">Position</TableHead>
                         <TableHead className="text-xs">Status</TableHead>
                         <TableHead className="text-xs">Leave Balance</TableHead>
@@ -1062,10 +1095,15 @@ const AdminDashboard: React.FC = () => {
                               </div>
                             </div>
                           </TableCell>
-                         
                           <TableCell className="text-sm">{user.role || 'N/A'}</TableCell>
                           <TableCell>
-                            <Badge variant={user.isActive ? 'default' : 'secondary'} className="text-xs">
+                            <Badge
+                              className={
+                                user.isActive 
+                                  ? 'bg-green-500 text-white' 
+                                  : 'bg-gray-500 text-white'
+                              }
+                            >
                               {user.isActive ? 'Active' : 'Inactive'}
                             </Badge>
                           </TableCell>
@@ -1089,7 +1127,6 @@ const AdminDashboard: React.FC = () => {
                                   <Eye className="h-3 w-3 mr-2" />
                                   View Details
                                 </DropdownMenuItem>
-                              
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </TableCell>
@@ -1109,15 +1146,11 @@ const AdminDashboard: React.FC = () => {
             <PaginationControls
               pagination={usersPagination}
               setPagination={setUsersPagination}
-              totalItems={filteredUsers.length}
               compact={isMobile}
             />
           </Card>
         </TabsContent>
       </Tabs>
-
-      {/* Mobile Bottom Navigation */}
-      
 
       {/* Detail Drawer for Mobile / Dialog for Desktop */}
       {isMobile ? (
@@ -1179,7 +1212,7 @@ const StatCard: React.FC<{
   color: string;
   compact?: boolean;
 }> = ({ title, value, icon: Icon, color }) => {
-  const colorClasses = {
+  const colorClasses: Record<string, string> = {
     blue: 'bg-blue-50 text-blue-600',
     green: 'bg-green-50 text-green-600',
     yellow: 'bg-yellow-50 text-yellow-600',
@@ -1196,8 +1229,8 @@ const StatCard: React.FC<{
           <p className="text-xs sm:text-sm text-gray-500">{title}</p>
           <p className="text-base sm:text-xl font-light mt-0.5 sm:mt-1">{value}</p>
         </div>
-        <div className={`${colorClasses[color as keyof typeof colorClasses]} p-1.5 sm:p-2 rounded-lg`}>
-          <Icon className={`h-3 w-3 sm:h-5 sm:w-5`} />
+        <div className={`${colorClasses[color]} p-1.5 sm:p-2 rounded-lg`}>
+          <Icon className="h-3 w-3 sm:h-5 sm:w-5" />
         </div>
       </div>
     </div>
