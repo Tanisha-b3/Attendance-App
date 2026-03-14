@@ -1,73 +1,156 @@
-# React + TypeScript + Vite
+# Attendance & Leave Management System – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
 
-Currently, two official plugins are available:
+The **Attendance & Leave Management System (Frontend)** is a responsive web application that allows employees and administrators to manage attendance records and leave requests efficiently.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Employees can mark their daily attendance, apply for leave, and track leave status. Administrators can view employee attendance, manage leave requests, and approve or reject applications through a centralized dashboard.
 
-## React Compiler
+The application is built using **React, TypeScript, and modern UI components** to ensure a fast and user-friendly experience.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **React.js** – Component-based UI development
+* **TypeScript** – Static typing for better code quality
+* **Vite** – Fast development and build tool
+* **Tailwind CSS** – Utility-first styling framework
+* **Shadcn UI** – Pre-built UI components
+* **React Router** – Navigation and routing
+* **Axios** – API communication with backend
+* **React Hot Toast** – Notifications and alerts
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Features
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Authentication
+
+* Secure login and registration
+* Role-based access control (Admin / Employee)
+
+### Employee Features
+
+* Mark daily attendance
+* Apply for leave
+* View leave request status
+* Dashboard with attendance summary
+
+### Admin Features
+
+* View all employee attendance records
+* Approve or reject leave requests
+* Filter leave requests by status
+* Dashboard analytics
+
+---
+
+## Folder Structure
+
+```
+src
+│
+├── components        # Reusable UI components
+├── pages             # Application pages (Dashboard, Login, etc.)
+├── services          # API service functions
+├── context           # Global state management
+├── hooks             # Custom React hooks
+├── utils             # Helper functions
+└── App.tsx           # Main application component
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Installation Steps
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository
+
 ```
+git clone https://github.com/your-username/attendance-frontend.git
+```
+
+### 2. Navigate to the project folder
+
+```
+cd attendance-frontend
+```
+
+### 3. Install dependencies
+
+```
+npm install
+```
+
+### 4. Run the development server
+
+```
+npm run dev
+```
+
+The application will run at:
+
+```
+http://localhost:5173
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the root directory and add:
+
+```
+VITE_API_URL=http://localhost:5000/api
+```
+
+This variable is used to connect the frontend with the backend API.
+
+---
+
+## API Integration
+
+The frontend communicates with the backend using **Axios services**.
+
+Example endpoints used:
+
+* `POST /api/auth/login` – User login
+* `POST /api/auth/register` – User registration
+* `POST /api/attendance/mark` – Mark attendance
+* `GET /api/attendance` – Get attendance records
+* `POST /api/leave/apply` – Apply leave
+* `GET /api/leave` – Get leave requests
+* `PUT /api/leave/:id` – Approve / reject leave
+
+---
+
+## UI Components
+
+The project uses **Shadcn UI components** such as:
+
+* Button
+* Card
+* Dialog
+* Select
+* Textarea
+* Input
+* Toast Notifications
+
+These components help maintain a consistent and modern design system.
+
+---
+
+## Future Improvements
+
+* Email notifications for leave approval
+* Attendance analytics and charts
+* Calendar-based attendance view
+* Mobile-friendly enhancements
+
+---
+
+## Author
+
+**Tanisha Borana**
+
+Full Stack Developer | MERN Stack Enthusiast
