@@ -67,13 +67,13 @@ src
 ### 1. Clone the repository
 
 ```
-git clone https://github.com/your-username/attendance-frontend.git
+git clone https://github.com/your-username/Attendance-App.git
 ```
 
 ### 2. Navigate to the project folder
 
 ```
-cd attendance-frontend
+cd fromtend
 ```
 
 ### 3. Install dependencies
