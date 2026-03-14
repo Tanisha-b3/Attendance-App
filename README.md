@@ -286,6 +286,13 @@ The following AI tools were used during development:
 
 All final implementation and code integration were completed manually.
 
+**Claude.ai**
+* UI improvement ideas
+* Documentation guidance
+  
+**Deepseek**
+* UI improvement ideas
+* Documentation guidance
 ---
 
 # ⚠ Known Limitations
