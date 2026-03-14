@@ -89,7 +89,7 @@ backend
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/attendance-backend.git
+git clone https://github.com/your-username/Attendance-App.git
 ```
 
 ### 2. Navigate to the backend folder
