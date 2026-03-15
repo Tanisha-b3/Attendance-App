@@ -55,8 +55,6 @@ src
 ├── pages             # Application pages (Dashboard, Login, etc.)
 ├── services          # API service functions
 ├── context           # Global state management
-├── hooks             # Custom React hooks
-├── utils             # Helper functions
 └── App.tsx           # Main application component
 ```
 
