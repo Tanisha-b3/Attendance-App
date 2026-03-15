@@ -100,7 +100,6 @@ Attendance-App
 │   ├── pages
 │   ├── services
 │   ├── context
-│   ├── hooks
 │   └── App.tsx
 │
 └── README.md
